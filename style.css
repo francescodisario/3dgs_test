@@ -1,0 +1,18 @@
+#videoContainer {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border: 1px solid #ccc;
+  cursor: grab;
+  background: black;
+}
+
+#zoomVideo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  max-width: 100%;
+  max-height: 100%;
+}
