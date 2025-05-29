@@ -14,11 +14,12 @@
 
 
     <p>
-        <strong>Pre-training</strong> refers to a two-stage optimization: the model is first trained on the same scene using diffuse and noisy textures, allowing it to learn a strong geometric prior. Then, all geometry-related parameters are frozen, and only the color representation is fine-tuned. This process involves <strong>30k + 20k iterations</strong> in total.
-        All variants use <em>vanilla-3DGS</em> as the backbone architecture.
-        <strong>End-to-End</strong> refers to the standard 3DGS training pipeline, which includes densification and pruning, and is run for <strong>30k iterations</strong>. 
-        <em>Note: End-to-end training with spherical Gaussians is currently missing.</em>
+        <strong>Pre-training</strong> follows a two-stage strategy: the model is first optimized on the same scene using diffuse and noisy textures to establish a strong geometric prior. Once this prior is learned, geometry-related parameters are frozen and only the color representation is fine-tuned. This procedure involves <strong>30k + 20k iterations</strong>.
+        All variants are built on top of a <em>vanilla-3DGS</em> backbone.
+        <strong>End-to-End</strong> indicates the standard 3DGS training pipeline, including densification and pruning, carried out for <strong>30k iterations</strong>.
+        <em>Note: End-to-end training with spherical Gaussians is currently missing. All models use a comparable number of parameters (7 SGs and 7 sites for Spherical-Voronoi), roughly matching the capacity of 3rd-order spherical harmonics.</em>
     </p>
+    
     
 
 
