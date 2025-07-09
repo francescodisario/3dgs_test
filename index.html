@@ -3,32 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Video Grid</title>
+    <title>Update</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-<div class="container mt-4">
+    <div class="container">
 
-    <h3 class="mt-3 text-center">
+        <h1>'Naive' Spherical-Voronoi + Beta Splatting </h1>
+        <p>It matches Zip-NeRF performances with 8 sites (equals to 48 coefficient oh orer 3 SHs) on Mip-NeRF360 and outperforms it on Blender and TaT dataset.
+            However, it does not handle reflection better. 
+        </p>
+
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th rowspan="2">Scene</th>
+                <th colspan="3">Voronoi + Beta Splatting</th>
+                <th colspan="3">ZipNeRF</th>
+              </tr>
+              <tr>
+                <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+                <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>bicycle</td><td>25.64</td><td>0.791</td><td>0.197</td><td>25.89</td><td>0.775</td><td>0.226</td></tr>
+              <tr><td>bonsai</td><td>34.70</td><td>0.957</td><td>0.230</td><td>34.68</td><td>0.951</td><td>0.195</td></tr>
+              <tr><td>counter</td><td>30.95</td><td>0.929</td><td>0.223</td><td>29.13</td><td>0.905</td><td>0.223</td></tr>
+              <tr><td>flowers</td><td>22.16</td><td>0.638</td><td>0.335</td><td>22.33</td><td>0.637</td><td>0.310</td></tr>
+              <tr><td>garden</td><td>27.72</td><td>0.872</td><td>0.121</td><td>28.19</td><td>0.864</td><td>0.127</td></tr>
+              <tr><td>kitchen</td><td>32.54</td><td>0.934</td><td>0.150</td><td>32.35</td><td>0.929</td><td>0.134</td></tr>
+              <tr><td>room</td><td>33.02</td><td>0.936</td><td>0.258</td><td>32.99</td><td>0.928</td><td>0.237</td></tr>
+              <tr><td>stump</td><td>27.18</td><td>0.802</td><td>0.213</td><td>27.41</td><td>0.792</td><td>0.233</td></tr>
+              <tr><td>treehill</td><td>23.06</td><td>0.653</td><td>0.337</td><td>24.01</td><td>0.677</td><td>0.279</td></tr>
+              <tr class="table-secondary">
+                <td><strong>AVG</strong></td><td><strong>28.55</strong></td><td><strong>0.835</strong></td><td><strong>0.229</strong></td><td><strong>28.55</strong></td><td><strong>0.829</strong></td><td><strong>0.218</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th rowspan="2">Scene</th>
+                <th colspan="3">Voronoi + Beta Splatting</th>
+                <th colspan="3">ZipNeRF</th>
+              </tr>
+              <tr>
+                <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+                <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>chair</td><td>36.94</td><td>0.989</td><td>0.013</td><td>35.75</td><td>0.987</td><td>0.017</td></tr>
+              <tr><td>drums</td><td>26.92</td><td>0.958</td><td>0.040</td><td>25.90</td><td>0.948</td><td>0.054</td></tr>
+              <tr><td>ficus</td><td>36.85</td><td>0.991</td><td>0.010</td><td>34.73</td><td>0.987</td><td>0.014</td></tr>
+              <tr><td>hotdog</td><td>38.34</td><td>0.988</td><td>0.021</td><td>37.98</td><td>0.987</td><td>0.023</td></tr>
+              <tr><td>lego</td><td>36.81</td><td>0.985</td><td>0.016</td><td>35.81</td><td>0.983</td><td>0.019</td></tr>
+              <tr><td>materials</td><td>30.74</td><td>0.965</td><td>0.039</td><td>30.98</td><td>0.967</td><td>0.040</td></tr>
+              <tr><td>mic</td><td>37.56</td><td>0.994</td><td>0.006</td><td>35.90</td><td>0.992</td><td>0.008</td></tr>
+              <tr><td>ship</td><td>31.87</td><td>0.912</td><td>0.119</td><td>32.30</td><td>0.937</td><td>0.114</td></tr>
+              <tr class="table-secondary">
+                <td><strong>AVG</strong></td><td><strong>34.50</strong></td><td><strong>0.973</strong></td><td><strong>0.033</strong></td><td><strong>33.67</strong></td><td><strong>0.974</strong></td><td><strong>0.036</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th rowspan="2">Scene</th>
+                <th colspan="3">Voronoi + Beta Splatting</th>
+                <th colspan="3">ZipNeRF</th>
+              </tr>
+              <tr>
+                <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+                <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>train</td><td>22.99</td><td>0.842</td><td>0.213</td><td>22.19</td><td>0.814</td><td>0.119</td></tr>
+              <tr><td>truck</td><td>26.48</td><td>0.900</td><td>0.128</td><td>25.09</td><td>0.864</td><td>0.081</td></tr>
+              <tr class="table-secondary">
+                <td><strong>AVG</strong></td><td><strong>24.73</strong></td><td><strong>0.871</strong></td><td><strong>0.171</strong></td><td><strong>23.64</strong></td><td><strong>0.839</strong></td><td><strong>0.100</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          
+          
+
+</div>
+    
+    
+
+    <div class="container m-5">
+        <hr>
+        <!-- <ul class="list-group list-group-flush mb-5">
+            <li class="list-group-item">✔️ Implemented on 2DGS and Beta-Splatting</li>
+            <li class="list-group-item">✔️ SHs vs Beta Representations</li>
+            <li class="list-group-item">✔️ Results on MCMC-3DGS with SGs and SVs</li>
+            <li class="list-group-item">✔️ Mesh Example (needs improvement)</li>
+        </ul> -->
+        <h1>
+            Reflective Direction
+        </h1>
+
+        <h3>Naive (Spherical Voronoi, but same results with SGs and SHs)</h3>
+
+        <div class="text-center container m-5">
+            <video controls class="w-25 h-auto">
+                <source src="./sphere/voronoi64.mp4" type="video/mp4">
+            </video>
+        </div>
+
+
+        <h3 class="mt-5">Using a shallow mlp to predict color-model attributes (gives spatial regularization)</h3>
+
+        <h3 class="mt-3 text-center"></h3>
+        <div class="text-center container">
+            <video controls class="w-100 h-auto">
+                <source src="./sphere/final.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <h3> Qualitative Results </h3>
+
+
+
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th rowspan="2">Method</th>
+                        <th colspan="2">Metrics</th>
+                    </tr>
+                    <tr>
+                        <th>PSNR</th>
+                        <th>SSIM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>MLP</td><td>29.53</td><td>0.964</td></tr>
+                    <tr><td>SGS</td><td>25.62</td><td>0.952</td></tr>
+                    <tr><td>SV</td><td>26.77</td><td>0.950</td></tr>
+                    <tr><td>SH</td><td>20.00</td><td>0.910</td></tr>
+
+                </tbody>
+            </table>
+
+
+
+
+
+
+    </div>
+
+
+
+      
+
+    <hr>
+
+
+<!-- 
+
+    
+    <h1>1. Qualitative Results</h1>
+    <h3 class="mt-3 text-center">MCMC-3DGS</h3>
+    <div class="text-center container">
+        <video controls class="w-100 h-auto">
+            <source src="./mcmc-3dgs/test_mcmc2.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="text-center container">
+        <div class="row">
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./mcmc-3dgs/zoom0_mcmc2.mp4" type="video/mp4">
+            </video>
+            </div>
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./mcmc-3dgs/zoom1_mcmc2.mp4" type="video/mp4">
+            </video>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3 class="mt-3 text-center">2DGS</h3>
+    <div class="text-center container">
+        <video controls class="w-100 h-auto">
+            <source src="./2dgs/test_2dgs2.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="text-center container">
+        <div class="row">
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./2dgs/zoom0_2dgs2.mp4" type="video/mp4">
+            </video>
+            </div>
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./2dgs/zoom1_2dgs2.mp4" type="video/mp4">
+            </video>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+        <h3 class="mt-3 text-center">BETA-SPLATTING</h3>
+    <div class="text-center container">
+        <video controls class="w-100 h-auto">
+            <source src="./beta_splatting/test_beta2.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="text-center container">
+        <div class="row">
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./beta_splatting/zoom0_beta2.mp4" type="video/mp4">
+            </video>
+            </div>
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./beta_splatting/zoom1_beta2.mp4" type="video/mp4">
+            </video>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h1>2. Quantitative results</h1>
+
+    <h3>a) SHs vs Spherical Betas</h3>
+    <p>Results differs from paper. Spherical betas are not that better than shs, but they require half of the parameters.</p>
+    <div class="container mt-4">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>Scene</th>
+                <th colspan="3">Beta Splatting with SHs</th>
+                <th colspan="3">Beta Splatting with SBs</th>
+                <th colspan="3">Beta Splatting (Paper)</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
+                <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
+                <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>chair</td><td>36.87</td><td>0.990</td><td>0.013</td><td>36.95</td><td>0.990</td><td>0.013</td><td>36.70</td><td>0.990</td><td>0.010</td></tr>
+            <tr><td>drums</td><td>26.30</td><td>0.956</td><td>0.043</td><td>26.77</td><td>0.958</td><td>0.039</td><td>26.81</td><td>0.958</td><td>0.032</td></tr>
+            <tr><td>ficus</td><td>36.26</td><td>0.990</td><td>0.011</td><td>36.52</td><td>0.990</td><td>0.011</td><td>36.79</td><td>0.990</td><td>0.010</td></tr>
+            <tr><td>hotdog</td><td>38.24</td><td>0.988</td><td>0.021</td><td>38.34</td><td>0.988</td><td>0.022</td><td>38.95</td><td>0.988</td><td>0.016</td></tr>
+            <tr><td>lego</td><td>36.86</td><td>0.986</td><td>0.016</td><td>36.93</td><td>0.986</td><td>0.016</td><td>37.11</td><td>0.985</td><td>0.014</td></tr>
+            <tr><td>materials</td><td>30.60</td><td>0.965</td><td>0.038</td><td>30.95</td><td>0.968</td><td>0.037</td><td>31.13</td><td>0.966</td><td>0.031</td></tr>
+            <tr><td>mic</td><td>36.95</td><td>0.994</td><td>0.007</td><td>36.93</td><td>0.994</td><td>0.006</td><td>37.67</td><td>0.994</td><td>0.005</td></tr>
+            <tr><td>ship</td><td>31.60</td><td>0.912</td><td>0.120</td><td>31.28</td><td>0.910</td><td>0.123</td><td>32.15</td><td>0.910</td><td>0.104</td></tr>
+            <tr><td>AVG</td><td>34.21</td><td>0.973</td><td>0.034</td><td>34.33</td><td>0.973</td><td>0.033</td><td>34.66</td><td>0.973</td><td>0.028</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>b) MCMC with SHs, SGs and SVs</h3>
+
+    <div class="container mt-4">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th>Scene</th>
+            <th colspan="2">SHs</th>
+            <th colspan="2">SGs</th>
+            <th colspan="2">SVs</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>PSNR ↑</th><th>SSIM ↑</th>
+            <th>PSNR ↑</th><th>SSIM ↑</th>
+            <th>PSNR ↑</th><th>SSIM ↑</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>chair</td><td>36.32</td><td>0.989</td><td>36.18</td><td>0.988</td><td>36.76</td><td>0.989</td></tr>
+        <tr><td>drums</td><td>26.22</td><td>0.954</td><td>26.24</td><td>0.956</td><td>27.06</td><td>0.959</td></tr>
+        <tr><td>ficus</td><td>34.88</td><td>0.988</td><td>35.44</td><td>0.989</td><td>35.83</td><td>0.989</td></tr>
+        <tr><td>hotdog</td><td>37.34</td><td>0.986</td><td>37.54</td><td>0.987</td><td>38.72</td><td>0.988</td></tr>
+        <tr><td>lego</td><td>35.75</td><td>0.984</td><td>35.91</td><td>0.985</td><td>36.31</td><td>0.985</td></tr>
+        <tr><td>materials</td><td>30.56</td><td>0.964</td><td>30.43</td><td>0.965</td><td>30.86</td><td>0.966</td></tr>
+        <tr><td>mic</td><td>37.27</td><td>0.994</td><td>36.89</td><td>0.994</td><td>37.67</td><td>0.995</td></tr>
+        <tr><td>ship</td><td>30.76</td><td>0.907</td><td>30.81</td><td>0.910</td><td>30.93</td><td>0.911</td></tr>
+        <tr class="table-secondary"><td><strong>AVG</strong></td><td><strong>33.64</strong></td><td><strong>0.971</strong></td><td><strong>33.68</strong></td><td><strong>0.972</strong></td><td><strong>34.27</strong></td><td><strong>0.973</strong></td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <h3>c) Results on Materials</h3>
+    <div class="container mt-5">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th rowspan="2">Method</th>
+            <th rowspan="2">Split</th>
+            <th colspan="3">SHs</th>
+            <th colspan="3">SGs</th>
+            <th colspan="3">SVs</th>
+            <th colspan="3">SBs</th>
+        </tr>
+        <tr>
+            <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+            <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+            <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+            <th>PSNR</th><th>SSIM</th><th>LPIPS</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td rowspan="2">MCMC-3DGS</td><td>test</td>
+            <td>30.58</td><td>0.965</td><td>0.040</td>
+            <td>30.44</td><td>0.965</td><td>0.040</td>
+            <td>30.85</td><td>0.966</td><td>0.039</td>
+            <td>-</td><td>-</td><td>-</td>
+        </tr>
+        <tr><td>train</td>
+            <td>35.62</td><td>0.990</td><td>0.024</td>
+            <td>35.30</td><td>0.989</td><td>0.025</td>
+            <td>38.27</td><td>0.993</td><td>0.022</td>
+            <td>-</td><td>-</td><td>-</td>
+        </tr>
+
+        <tr><td rowspan="2">2DGS</td><td>test</td>
+            <td>29.70</td><td>0.958</td><td>0.048</td>
+            <td>28.60</td><td>0.950</td><td>0.057</td>
+            <td>29.83</td><td>0.959</td><td>0.0491</td>
+            <td>-</td><td>-</td><td>-</td>
+        </tr>
+        <tr><td>train</td>
+            <td>-</td><td>-</td><td>-</td>
+            <td>32.41</td><td>0.978</td><td>0.039</td>
+            <td>35.70</td><td>0.987</td><td>0.029</td>
+            <td>-</td><td>-</td><td>-</td>
+        </tr>
+
+        <tr><td rowspan="2">Beta-Splatting</td><td>test</td>
+            <td>30.62</td><td>0.965</td><td>0.038</td>
+            <td>30.37</td><td>0.965</td><td>0.039</td>
+            <td>30.95</td><td>0.967</td><td>0.036</td>
+            <td>30.87</td><td>0.967</td><td>0.036</td>
+        </tr>
+        <tr><td>train</td>
+            <td>37.05</td><td>0.992</td><td>0.020</td>
+            <td>36.12</td><td>0.990</td><td>0.022</td>
+            <td>40.92</td><td>0.995</td><td>0.018</td>
+            <td>39.45</td><td>0.994</td><td>0.019</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+
+
+    <hr>
+
+
+    <h1>3. Color Optimization only</h1>
+    <p>Something is definitely wrong... trying to figure out what</p>
+    <div class="text-center container">
+        <video controls class="w-100 h-auto">
+            <source src="./mesh/test_mesh.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="text-center container">
+        <div class="row">
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./mesh/zoom0_mesh.mp4" type="video/mp4">
+            </video>
+            </div>
+            <div class="col-6">
+            <video controls class="w-100 h-auto">
+                <source src="./mesh/zoom1_mesh.mp4" type="video/mp4">
+            </video>
+            </div>
+        </div>
+    </div>
+ -->
+
+
+
+    <!-- <h3 class="mt-3 text-center">
         End-to-end training (30k iterations, vanilla 3DGS)
     </h3>
     
-
-    <!-- <label for="zoom-slider" class="form-label">Zoom</label>
-    <input type="range" min="1" max="5" step="0.01" value="1.0" id="zoom-lider" class="form-range mb-3"> -->
-<!-- 
-    <div class="mb-3">
-        <button id="playBtn" class="btn btn-success me-2">▶ Play</button>
-        <button id="pauseBtn" class="btn btn-danger">⏸ Pause</button>
-    </div> -->
-
-    <!-- <div id="videoContainer"> -->
-
-    <!-- </div>
- </div>
-  -->
 
     <div class="text-center container">
         <video controls class="w-100 h-auto">
@@ -215,7 +588,7 @@
     </tbody>
     </table>    
 
-</div>
+</div> -->
 
 
 
