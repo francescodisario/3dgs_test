@@ -108,7 +108,26 @@
             <li class="list-group-item">✔️ Results on MCMC-3DGS with SGs and SVs</li>
             <li class="list-group-item">✔️ Mesh Example (needs improvement)</li>
         </ul> -->
-        <h1>
+        <h1>Envmap learning</h1>
+        <p>SGS and voronoi uses 1024 gaussians/sites. Cubemap is 6x512, Sph-Mip is 512x1024x1 (as in ref-gs, but without mipmaps). Results are similar for every model.
+            Voronoi and SGS are much more compact.
+        </p>
+            <div class="text-center container">
+                <video controls class="w-100 h-auto">
+                    <source src="./sphere_rough/envmaps_comparison.mp4" type="video/mp4">
+                </video>
+            </div>
+
+        <h1 class="mt-5">Temperature is related to roughness</h1>
+        <p>Instead of using mip-maps as in Ref-gs, the temperature in voronoi may be used. In this example 512 sites are used.</p>
+            <div class="text-center container">
+                <video controls class="w-100 h-auto">
+                    <source src="./sphere_rough/voronoi_betas.mp4" type="video/mp4">
+                </video>
+            </div>
+        <hr>
+
+        <h1 class="mt-5">
             Reflective Direction
         </h1>
 
