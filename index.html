@@ -103,8 +103,21 @@
     <div class="container mt-5">
         <hr>
 
-
         <h1>Spatially-varying Envmap</h1>
+
+        <p> An MLP without position as input produces blurry outputs. When position is included, the model learns the map much better (PSNR ~36).
+            I also tried a simple light probe approach using a 4×4×4 grid, where each voxel contains a spherical Voronoi with 512 sites. Each spherical Voronoi is linearly interpolated based on position.
+            The position can be computed per-pixel (slower but artifact-free) or per-vertex (much faster, but with visible aliasing). The PSNR is around 36 for the per-pixel method and around 35 for the per-vertex method.
+            A single large Voronoi can't reproduce the map accurately (PSNR ~22).
+        </p>
+
+            <div class="text-center container">
+                <video controls class="w-100 h-auto">
+                    <source src="./classroom/lightprobes.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
             <div class="text-center container">
                 <video controls class="w-100 h-auto">
                     <source src="./classroom/sv_envmap.mp4" type="video/mp4">
