@@ -9,6 +9,49 @@
 </head>
 <body>
 
+
+    <div class="container mt-5">
+        <h1>Deferred Rendering</h1>
+        <p>
+            Idea: render normals, pos, roughness, diffuse and then use them to compute the specular part with light probes. 
+            It's very similar to ref-gs, but instead of using a Spherical-Mipmap and a MLP, we use a grid of light probes.
+            Results are not great so far. 
+
+        </p>
+        <div class="text-center container mt-5">
+            <video controls class="w-100 h-auto">
+                <source src="./refnerf/refgs.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="text-center container mt-5">
+            <video controls class="w-100 h-auto">
+                <source src="./refnerf/lp.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="text-center container mt-5">
+            <video controls class="w-100 h-auto">
+                <source src="./refnerf/lpp.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+        <div class="container mt-5">
+        <h1>Comparison</h1>
+
+        <div class="text-center container mt-5">
+            <video controls class="w-100 h-auto">
+                <source src="./refnerf/test_comparison.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="text-center container mt-5">
+            <video controls class="w-100 h-auto">
+                <source src="./refnerf/normals_comparison.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
     <div class="container mt-5">
         <h1>2DGS + Light Probes</h1>
         <p>
