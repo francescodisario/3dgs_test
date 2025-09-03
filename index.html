@@ -11,61 +11,161 @@
 
 
     <div class="container mt-5">
-        <h1>Deferred Rendering</h1>
-        <p>
-            Idea: render normals, pos, roughness, diffuse and then use them to compute the specular part with light probes. 
-            It's very similar to ref-gs, but instead of using a Spherical-Mipmap and a MLP, we use a grid of light probes.
-      
-
-        </p>
-
-        <h1>Light probes (Voronoi)</h1>
-        <div class="text-center container mt-5">
-            <video controls class="w-100 h-auto">
-                <source src="./refnerf/lightprobes.mp4" type="video/mp4">
-            </video>
-        </div>
-
-        <h1>Light probes (MLP)</h1>
-        <div class="text-center container mt-5">
-            <video controls class="w-100 h-auto">
-                <source src="./refnerf/mlp.mp4" type="video/mp4">
-            </video>
-        </div>
-
-        <h1>Ref-GS</h1>
-        <div class="text-center container mt-5">
-            <video controls class="w-100 h-auto">
-                <source src="./refnerf/refgs.mp4" type="video/mp4">
-            </video>
-        </div>
-
-
-    </div>
-
+    
         <div class="container mt-5">
-        <h1>Comparison</h1>
-
-        <div class="text-center container mt-5">
-            <video controls class="w-100 h-auto">
-                <source src="./refnerf/comparison4.mp4" type="video/mp4">
-            </video>
-        </div>
-
-
-    </div>
-
-    <div class="container mt-5">
         <h1>2DGS + Light Probes</h1>
         <p>
-            Results are currently not very good. Still, it's better than 3DGS and 2DGS alone, but far from Ref-NeRF and Ref-GS.
-            Using an MLP to generate the light probes leads to slightly better results. However, another issue is that it's quite slow.
+            Results are now good. 
+            Approach: deferred rendering. Each surfel is associated with a roughness and position value. I splat the surfels obtaining a position map and a roughness map.
+            I use position to interpolate among a grid of probes, and roughness to interpolate 'inside' the probes. <b>Results are obtained without any mlp and on par with ReF-GS on shiny blender</b>.
+            (Still a lot of room for improvement).
+
+            <br>
+
+            It now works way better for three reasons. 
+            <ol>
+                <li class="m-3">Improved voronoi representation: by using a cubemap to accellerate it (each texel corresponds to a finite set of K sites), we can use many more sites (I am using K=16 and 2048 sites per probes)</li>
+                <li class="m-3">Improved roughness 'interpolation': the idea is that, the rougher the material, the more spread should be the softmax weighting the selected sites. 
+                    Therefore roughness ~ temperature. <b>Temperature</b> is not a property of the voronoi probe anymore. I use roughness  [0, 1] to linearly interpolate among defined
+                    temperature values. This works way better than before and better than mipmapping, while being much faster.
+                </li>
+                <li class="m-3">Sparse Grid with optimizable position of probes: I am using also a sparse grid where the position of each probes is optimized. Given a position, I find
+                    the K-nearest probes and interpolate among them with a inverse distance weighting. It's like a voronoi partition. 
+                </li>
+            </ol>
         </p>
+
         <div class="text-center container mt-5">
+            <h3>Ball</h3>
             <video controls class="w-100 h-auto">
-                <source src="./refnerf/toaster.mp4" type="video/mp4">
+                <source src="./update0309/ball/ball_collage.mp4" type="video/mp4">
             </video>
+
+            
+            <div class="row">
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/ball/ball_output_plus_gt.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/ball/ball_normals_plus_gt_normal.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
         </div>
+
+
+        <div class="text-center container mt-5">
+            <h3>Car</h3>
+            <video controls class="w-100 h-auto">
+                <source src="./update0309/car/car_collage.mp4" type="video/mp4">
+            </video>
+
+            
+            <div class="row">
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/car/car_output_plus_gt.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/car/car_normals_plus_gt_normal.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center container mt-5">
+            <h3>Coffee</h3>
+            <video controls class="w-100 h-auto">
+                <source src="./update0309/coffee/coffee_collage.mp4" type="video/mp4">
+            </video>
+
+            
+            <div class="row">
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/coffee/coffee_output_plus_gt.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/coffee/coffee_normals_plus_gt_normal.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center container mt-5">
+            <h3>Helmet</h3>
+            <video controls class="w-100 h-auto">
+                <source src="./update0309/helmet/helmet_collage.mp4" type="video/mp4">
+            </video>
+
+            
+            <div class="row">
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/helmet/helmet_output_plus_gt.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/helmet/helmet_normals_plus_gt_normal.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center container mt-5">
+            <h3>Teapot</h3>
+            <video controls class="w-100 h-auto">
+                <source src="./update0309/teapot/teapot_collage.mp4" type="video/mp4">
+            </video>
+
+            
+            <div class="row">
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/teapot/teapot_output_plus_gt.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/teapot/teapot_normals_plus_gt_normal.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center container mt-5">
+            <h3>toaster</h3>
+            <video controls class="w-100 h-auto">
+                <source src="./update0309/toaster/toaster_collage.mp4" type="video/mp4">
+            </video>
+
+            
+            <div class="row">
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/toaster/toaster_output_plus_gt.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="'col">
+                    <video controls class="w-100 h-auto">
+                        <source src="./update0309/toaster/toaster_normals_plus_gt_normal.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+        
 
     </div>
 
@@ -696,5 +796,177 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="./script.js"></script>
+
+
+    <script>
+        // Configurazione scene
+        const scenes = ['ball', 'car', 'coffee', 'helmet', 'teapot', 'toaster'];
+        const basePath = './update0309';
+        
+        // Template per una singola scena
+        function createSceneHTML(sceneName) {
+            return `
+                <div class="text-center scene-section" id="scene-${sceneName}">
+                    <h3 class="scene-title">${sceneName}</h3>
+                    
+                    <!-- Video principale (collage) -->
+                    <div class="main-video">
+                        <video controls class="w-100 h-auto" preload="metadata">
+                            <source src="${basePath}/${sceneName}/${sceneName}_collage.mp4" type="video/mp4">
+                            Il tuo browser non supporta il tag video.
+                        </video>
+                    </div>
+                    
+                    <!-- Video secondari -->
+                    <div class="row secondary-videos">
+                        <div class="col-md-6">
+                            <video controls class="w-100 h-auto" preload="metadata">
+                                <source src="${basePath}/${sceneName}/${sceneName}_output_plus_gt.mp4" type="video/mp4">
+                                Il tuo browser non supporta il tag video.
+                            </video>
+                        </div>
+                        <div class="col-md-6">
+                            <video controls class="w-100 h-auto" preload="metadata">
+                                <source src="${basePath}/${sceneName}/${sceneName}_normals_plus_gt_normal.mp4" type="video/mp4">
+                                Il tuo browser non supporta il tag video.
+                            </source>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Funzione per verificare se un video esiste
+        async function videoExists(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+        
+        // Funzione per caricare una scena con verifica file
+        async function loadScene(sceneName) {
+            const collageUrl = `${basePath}/${sceneName}/${sceneName}_collage.mp4`;
+            const outputUrl = `${basePath}/${sceneName}/${sceneName}_output_plus_gt.mp4`;
+            const normalsUrl = `${basePath}/${sceneName}/${sceneName}_normals_plus_gt_normal.mp4`;
+            
+            // Verifica se almeno il video principale esiste
+            const collageExists = await videoExists(collageUrl);
+            
+            if (collageExists) {
+                return createSceneHTML(sceneName);
+            } else {
+                console.warn(`Video collage non trovato per la scena: ${sceneName}`);
+                return null;
+            }
+        }
+        
+        // Funzione principale per caricare tutte le scene
+        async function loadAllScenes() {
+            const container = document.getElementById('scene-container');
+            const loading = document.getElementById('loading');
+            
+            // Mostra loading
+            loading.style.display = 'block';
+            
+            try {
+                // Carica tutte le scene in parallelo
+                const scenePromises = scenes.map(scene => loadScene(scene));
+                const sceneHTMLs = await Promise.all(scenePromises);
+                
+                // Filtra le scene che sono state caricate con successo
+                const validScenes = sceneHTMLs.filter(html => html !== null);
+                
+                if (validScenes.length > 0) {
+                    container.innerHTML = validScenes.join('');
+                    
+                    // Aggiungi gestori per errori video
+                    addVideoErrorHandlers();
+                } else {
+                    container.innerHTML = '<div class="alert alert-warning text-center">Nessuna scena trovata.</div>';
+                }
+                
+            } catch (error) {
+                console.error('Errore nel caricamento delle scene:', error);
+                container.innerHTML = '<div class="alert alert-danger text-center">Errore nel caricamento delle scene.</div>';
+            } finally {
+                // Nascondi loading
+                loading.style.display = 'none';
+            }
+        }
+        
+        // Aggiungi gestori per errori video
+        function addVideoErrorHandlers() {
+            const videos = document.querySelectorAll('video');
+            
+            videos.forEach(video => {
+                video.addEventListener('error', function(e) {
+                    console.warn('Errore nel caricamento video:', this.src);
+                    this.style.display = 'none';
+                    
+                    // Mostra messaggio di errore
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'alert alert-warning';
+                    errorDiv.textContent = 'Video non disponibile';
+                    this.parentNode.insertBefore(errorDiv, this.nextSibling);
+                });
+                
+                video.addEventListener('loadedmetadata', function() {
+                    console.log('Video caricato:', this.src);
+                });
+            });
+        }
+        
+        // Funzioni di utilità aggiuntive
+        
+        // Aggiungi una nuova scena dinamicamente
+        function addScene(sceneName) {
+            if (!scenes.includes(sceneName)) {
+                scenes.push(sceneName);
+                loadScene(sceneName).then(html => {
+                    if (html) {
+                        const container = document.getElementById('scene-container');
+                        container.insertAdjacentHTML('beforeend', html);
+                        addVideoErrorHandlers();
+                    }
+                });
+            }
+        }
+        
+        // Rimuovi una scena
+        function removeScene(sceneName) {
+            const sceneElement = document.getElementById(`scene-${sceneName}`);
+            if (sceneElement) {
+                sceneElement.remove();
+            }
+            
+            const index = scenes.indexOf(sceneName);
+            if (index > -1) {
+                scenes.splice(index, 1);
+            }
+        }
+        
+        // Aggiorna configurazione basePath
+        function updateBasePath(newPath) {
+            basePath = newPath;
+            loadAllScenes(); // Ricarica con il nuovo path
+        }
+        
+        // Inizializza quando il DOM è pronto
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllScenes();
+        });
+        
+        // Esporta funzioni globali per uso esterno
+        window.SceneGallery = {
+            addScene: addScene,
+            removeScene: removeScene,
+            updateBasePath: updateBasePath,
+            reload: loadAllScenes,
+            getScenes: () => scenes
+        };
+    </script>
 </body>
 </html>
