@@ -17,11 +17,250 @@
         tbody tr:nth-child(even) { background: #fafafa; }
         tbody tr.ours { background: #d7f7d7; font-weight: bold; }
     </style>
+
+
+  <style>
+    :root { --handle-size: 24px; --track-height: 4px; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
+    }
+    h1 {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 600;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    /* contenitore verticale */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: 18px;
+      max-width: 1000px;
+      margin: 0 auto 32px;
+    }
+
+    .compare {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45);
+      background: #000;
+      user-select: none;
+      touch-action: none;
+    }
+    .compare img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      contain: layout paint;
+      will-change: clip-path;
+    }
+    .top { clip-path: inset(0 50% 0 0); }
+    .divider { position: absolute; inset: 0; pointer-events: none; }
+    .divider-line {
+      position: absolute; top: 0; bottom: 0;
+      width: 2px; background: rgba(255,255,255,.9);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.35);
+      left: 50%;
+    }
+    .handle {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: var(--handle-size); height: var(--handle-size);
+      border-radius: 50%; background: #fff;
+      box-shadow: 0 3px 12px rgba(0,0,0,.35);
+      display: grid; place-items: center;
+      cursor: ew-resize; border: 1px solid rgba(0,0,0,.15);
+    }
+    .handle::before, .handle::after {
+      content: ""; width: 6px; height: 10px;
+      border-inline: 2px solid #111; border-radius: 2px;
+      margin-inline: -2px;
+    }
+    .slider {
+      position: absolute; left: 50%; bottom: 12px;
+      transform: translateX(-50%);
+      width: min(520px, 86%); height: var(--track-height);
+      appearance: none; background: rgba(255,255,255,.35);
+      border-radius: 999px; outline: none;
+    }
+    .slider::-webkit-slider-thumb,
+    .slider::-moz-range-thumb {
+      width: var(--handle-size); height: var(--handle-size);
+      border-radius: 50%; background: #fff;
+      border: 1px solid rgba(0,0,0,.15);
+      box-shadow: 0 3px 12px rgba(0,0,0,.35);
+      cursor: ew-resize;
+    }
+
+    .label {
+      position: absolute; top: 10px;
+      font-size: 14px; padding: 6px 10px;
+      border-radius: 8px; background: rgba(0,0,0,.55);
+      backdrop-filter: blur(4px); white-space: nowrap;
+      color: white;
+    }
+    .label.left  { left: 12px; }
+    .label.right { right: 12px; }
+
+    .img-name {
+      position: absolute; top: 10px; right: 12px;
+      font-size: 13px; padding: 4px 8px;
+      border-radius: 6px; background: rgba(255,255,255,.8);
+      color: #121417; font-weight: 600; white-space: nowrap;
+      pointer-events: none;
+    }
+    .img-name.top    { z-index: 2; }
+    .img-name.bottom { z-index: 1; opacity: .85; }
+  </style>
+
+
 </head>
 <body>
 
 
     <div class="container mt-5">
+
+
+  <div class="grid" id="gallery"></div>
+
+
+
+
+    <div class="list" id="gallery"></div>
+
+  <template id="compare-template">
+    <figure class="compare" aria-label="Confronto immagini con cursore">
+      <img class="bottom" alt="">
+      <img class="top" alt="">
+      <figcaption class="label left">Ref-GS</figcaption>
+      <figcaption class="label right">Light Probes</figcaption>
+      <div class="img-name bottom"></div>
+      <div class="img-name top"></div>
+      <div class="divider" aria-hidden="true">
+        <div class="divider-line"></div>
+        <div class="handle"></div>
+      </div>
+      <input class="slider" type="range" min="0" max="100" value="50" step="0.1"
+             aria-label="Posizione del cursore di confronto (percentuale)" />
+    </figure>
+  </template>
+
+
+  <script>
+    const images = [
+      { src: "./ref_real/gardenspheres/lp/1.png", name: "Montagna", alt: "Montagna al tramonto" },
+      { src: "./ref_real/gardenspheres/ref-gs/1.png", name: "Mare",     alt: "Mare calmo" },
+      
+      { src: "./ref_real/gardenspheres/lp/10.png", name: "Montagna", alt: "Montagna al tramonto" },
+      { src: "./ref_real/gardenspheres/ref-gs/10.png", name: "Mare",     alt: "Mare calmo" },
+     
+      { src: "./ref_real/gardenspheres/lp/5.png", name: "Montagna", alt: "Montagna al tramonto" },
+      { src: "./ref_real/gardenspheres/ref-gs/5.png", name: "Mare",     alt: "Mare calmo" },
+      
+      { src: "./ref_real/toycar/lp/5.png", name: "Montagna", alt: "Montagna al tramonto" },
+      { src: "./ref_real/toycar/ref-gs/5.png", name: "Mare",     alt: "Mare calmo" },
+      
+      { src: "./ref_real/toycar/lp/1.png", name: "Montagna", alt: "Montagna al tramonto" },
+      { src: "./ref_real/toycar/ref-gs/1.png", name: "Mare",     alt: "Mare calmo" },
+      
+      { src: "./ref_real/toycar/lp/4.png", name: "Montagna", alt: "Montagna al tramonto" },
+      { src: "./ref_real/toycar/ref-gs/4.png", name: "Mare",     alt: "Mare calmo" },
+
+    ];
+
+    function pairwise(arr) {
+      const out = [];
+      for (let i = 0; i + 1 < arr.length; i += 2) out.push([arr[i], arr[i + 1]]);
+      return out;
+    }
+
+    class CompareSlider {
+      constructor(root) {
+        this.root   = root;
+        this.topImg = root.querySelector('.top');
+        this.botImg = root.querySelector('.bottom');
+        this.slider = root.querySelector('.slider');
+        this.line   = root.querySelector('.divider-line');
+        this.handle = root.querySelector('.handle');
+
+        this.w = root.clientWidth;
+        this.isDragging = false;
+        this.frame = null;
+
+        this.slider.addEventListener('input', (e) => this.schedule(parseFloat(e.target.value)), { passive: true });
+
+        const start = (e) => { this.isDragging = true; if (e.type === 'mousedown') e.preventDefault(); };
+        const move  = (e) => {
+          if (!this.isDragging) return;
+          const x = (e.touches?.[0]?.clientX) ?? e.clientX;
+          this.schedule(this.evtToPct(x));
+        };
+        const end   = () => { this.isDragging = false; };
+
+        this.handle.addEventListener('mousedown', start);
+        window.addEventListener('mousemove', move, { passive: true });
+        window.addEventListener('mouseup', end);
+        this.handle.addEventListener('touchstart', start, { passive: true });
+        window.addEventListener('touchmove', move, { passive: true });
+        window.addEventListener('touchend', end);
+
+        new ResizeObserver(() => {
+          this.w = this.root.clientWidth;
+          this.schedule(parseFloat(this.slider.value));
+        }).observe(this.root);
+
+        this.setPosition(parseFloat(this.slider.value));
+      }
+
+      evtToPct(clientX) {
+        const rect = this.root.getBoundingClientRect();
+        return ((clientX - rect.left) / rect.width) * 100;
+      }
+      setPosition(pct) {
+        pct = Math.max(0, Math.min(100, pct));
+        this.topImg.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        const px = (pct / 100) * this.w;
+        this.line.style.left = px + 'px';
+        this.handle.style.left = px + 'px';
+        this.slider.value = pct;
+      }
+      schedule(pct) {
+        if (this.frame) cancelAnimationFrame(this.frame);
+        this.frame = requestAnimationFrame(() => this.setPosition(pct));
+      }
+    }
+
+    const list = document.getElementById('gallery');
+    const tpl  = document.getElementById('compare-template');
+
+    pairwise(images).forEach(([a, b]) => {
+      const node = tpl.content.cloneNode(true);
+      const root = node.querySelector('.compare');
+
+      const bottom = root.querySelector('.bottom');
+      const top    = root.querySelector('.top');
+      const nameB  = root.querySelector('.img-name.bottom');
+      const nameT  = root.querySelector('.img-name.top');
+
+      bottom.src = a.src; bottom.alt = a.alt || a.name;
+      top.src    = b.src; top.alt    = b.alt || b.name;
+
+    //   nameB.textContent = a.name || a.alt || '';
+    //   nameT.textContent = b.name || b.alt || '';
+
+      list.appendChild(node);
+
+      new CompareSlider(list.lastElementChild);
+    });
+  </script>
+        
     
         <div class="container mt-5">
         <h1>2DGS + Light Probes</h1>
